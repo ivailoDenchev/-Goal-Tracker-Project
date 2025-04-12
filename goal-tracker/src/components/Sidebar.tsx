@@ -2,7 +2,12 @@ import React from 'react';
 import { SidebarContainer, LogoContainer, NavItem } from '../styles/Layout';
 import { FiHome, FiInbox, FiTarget, FiPlus, FiMoreHorizontal } from 'react-icons/fi';
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  onTabChange: (tab: string) => void;
+  activeTab?: string;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ onTabChange, activeTab = 'goals' }) => {
   return (
     <SidebarContainer>
       <LogoContainer>
@@ -27,11 +32,11 @@ const Sidebar: React.FC = () => {
       
       <nav style={{ marginTop: '20px' }}>
         <ul>
-          <NavItem active>
+          <NavItem active={activeTab === 'home'} onClick={() => onTabChange('home')}>
             <FiHome size={18} />
             <span>Home</span>
           </NavItem>
-          <NavItem>
+          <NavItem active={activeTab === 'inbox'} onClick={() => onTabChange('inbox')}>
             <FiInbox size={18} />
             <span>Inbox</span>
             <span style={{ 
@@ -48,12 +53,12 @@ const Sidebar: React.FC = () => {
             }}>9</span>
           </NavItem>
           
-          <NavItem>
+          <NavItem active={activeTab === 'goals'} onClick={() => onTabChange('goals')}>
             <FiTarget size={18} />
             <span>Goals</span>
           </NavItem>
           
-          <NavItem>
+          <NavItem active={activeTab === 'more'} onClick={() => onTabChange('more')}>
             <FiMoreHorizontal size={18} />
             <span>More</span>
           </NavItem>
@@ -70,7 +75,7 @@ const Sidebar: React.FC = () => {
           Spaces
         </div>
         <ul>
-          <NavItem>
+          <NavItem active={false}>
             <span style={{ 
               width: '20px', 
               height: '20px', 
@@ -85,7 +90,7 @@ const Sidebar: React.FC = () => {
             }}>M</span>
             <span>Marketing</span>
           </NavItem>
-          <NavItem>
+          <NavItem active={false}>
             <span style={{ 
               width: '20px', 
               height: '20px', 
@@ -100,7 +105,7 @@ const Sidebar: React.FC = () => {
             }}>P</span>
             <span>Product</span>
           </NavItem>
-          <NavItem>
+          <NavItem active={false}>
             <span style={{ 
               width: '20px', 
               height: '20px', 
@@ -115,7 +120,7 @@ const Sidebar: React.FC = () => {
             }}>E</span>
             <span>Engineering</span>
           </NavItem>
-          <NavItem>
+          <NavItem active={false}>
             <span style={{ 
               width: '20px', 
               height: '20px', 
@@ -130,7 +135,7 @@ const Sidebar: React.FC = () => {
             }}>D</span>
             <span>Design</span>
           </NavItem>
-          <NavItem>
+          <NavItem active={false}>
             <span style={{ 
               width: '20px', 
               height: '20px', 
@@ -145,7 +150,7 @@ const Sidebar: React.FC = () => {
             }}>F</span>
             <span>Finance</span>
           </NavItem>
-          <NavItem>
+          <NavItem active={false}>
             <span style={{ 
               width: '20px', 
               height: '20px', 
@@ -160,7 +165,7 @@ const Sidebar: React.FC = () => {
             }}>H</span>
             <span>HR</span>
           </NavItem>
-          <NavItem>
+          <NavItem active={false}>
             <FiPlus size={18} />
             <span>Add Space</span>
           </NavItem>
