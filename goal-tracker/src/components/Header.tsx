@@ -1,70 +1,92 @@
-import React from 'react';
-import { HeaderContainer, Button } from '../styles/Layout';
-import { FiSearch } from 'react-icons/fi';
+import React, { useState } from 'react';
+import { HeaderContainer } from '../styles/Layout';
+import { FiSearch, FiX } from 'react-icons/fi';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onClose?: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onClose }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
   return (
     <HeaderContainer style={{ 
-      backgroundColor: 'transparent', 
+      backgroundColor: 'var(--content-bg)',
       boxShadow: 'none', 
       color: 'var(--white-text)',
       borderBottom: 'none',
-      position: 'absolute',
+      position: 'fixed',
       top: 0,
-      left: '240px',
+      left: 0,
       right: 0,
       zIndex: 20,
-      padding: '12px 20px'
+      padding: '30px 20px',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <div style={{ 
-          position: 'relative',
-          width: '220px',
-          backgroundColor: 'rgba(255, 255, 255, 0.2)',
-          borderRadius: '4px', 
+      <div style={{ 
+        position: 'relative',
+        width: '450px',
+        maxWidth: '90%',
+        backgroundColor: 'white',
+        borderRadius: '30px', 
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+      }}>
+        <button style={{ 
+          width: '60px',
+          height: '60px',
           display: 'flex',
           alignItems: 'center',
-          padding: '6px 12px',
+          justifyContent: 'center',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
         }}>
-          <FiSearch color="white" size={16} style={{ marginRight: '8px' }} />
-          <input
-            type="text"
-            placeholder="Search..."
-            style={{
-              background: 'transparent',
-              border: 'none',
-              outline: 'none',
-              color: 'white',
-              width: '100%',
-              fontSize: '14px'
-            }}
-          />
-        </div>
-      </div>
-      
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <Button primary style={{ 
-          border: 'none', 
-          color: 'transparent',
-          width: '30px',
-          height: '30px',
-          padding: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <span style={{ 
-            fontSize: '11px', 
-            color: 'white', 
-            backgroundColor: 'var(--primary-color)',
-            width: '30px',
-            height: '30px',
+          <FiSearch color="#6e7ce0" size={22} />
+        </button>
+        <input
+          type="text"
+          placeholder="Type to search.."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            outline: 'none',
+            color: '#666',
+            width: '100%',
+            fontSize: '16px',
+            fontWeight: '500',
+            padding: '18px 0',
+          }}
+          autoFocus
+        />
+        <button 
+          onClick={() => {
+            if (searchQuery) {
+              setSearchQuery('');
+            } else if (onClose) {
+              onClose();
+            }
+          }}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            width: '60px',
+            height: '60px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            borderRadius: '8px'
-          }}>AI</span>
-        </Button>
+          }}
+        >
+          <FiX color="#666" size={22} />
+        </button>
       </div>
     </HeaderContainer>
   );
