@@ -1,19 +1,31 @@
 import React from 'react';
-import { useGoals } from '../contexts/GoalContext';
 import { SidebarContainer, LogoContainer, NavItem } from '../styles/Layout';
-import { FiHome, FiInbox, FiTarget, FiPlus } from 'react-icons/fi';
+import { FiHome, FiInbox, FiTarget, FiPlus, FiMoreHorizontal } from 'react-icons/fi';
 
 const Sidebar: React.FC = () => {
-  const { goals, activeGoal, setActiveGoal } = useGoals();
-
   return (
     <SidebarContainer>
       <LogoContainer>
-        <FiTarget size={20} color="var(--primary-color)" />
-        <span>Goal Tracker</span>
+        <span style={{ 
+          fontWeight: 500, 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '8px',
+          fontSize: '14px'
+        }}>
+          <span style={{ 
+            backgroundColor: '#f0f0f0', 
+            borderRadius: '4px', 
+            padding: '2px 6px',
+            marginRight: '4px'
+          }}>
+            Acme, Inc.
+          </span>
+          ▼
+        </span>
       </LogoContainer>
       
-      <nav>
+      <nav style={{ marginTop: '20px' }}>
         <ul>
           <NavItem active>
             <FiHome size={18} />
@@ -33,33 +45,127 @@ const Sidebar: React.FC = () => {
               alignItems: 'center', 
               justifyContent: 'center',
               fontSize: '12px'
-            }}>8</span>
+            }}>9</span>
           </NavItem>
           
-          <div style={{ padding: '10px 15px', marginTop: '10px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-              <span style={{ fontSize: '14px', color: 'var(--light-text)' }}>Goals</span>
-              <FiPlus size={16} color="var(--light-text)" style={{ cursor: 'pointer' }} />
-            </div>
-            {goals.map(goal => (
-              <NavItem 
-                key={goal.id} 
-                active={activeGoal?.id === goal.id}
-                onClick={() => setActiveGoal(goal)}
-              >
-                <div style={{ 
-                  width: '12px', 
-                  height: '12px', 
-                  borderRadius: '50%', 
-                  backgroundColor: 'var(--primary-color)',
-                  marginRight: '5px'
-                }} />
-                <span>{goal.title}</span>
-              </NavItem>
-            ))}
-          </div>
+          <NavItem>
+            <FiTarget size={18} />
+            <span>Goals</span>
+          </NavItem>
+          
+          <NavItem>
+            <FiMoreHorizontal size={18} />
+            <span>More</span>
+          </NavItem>
         </ul>
       </nav>
+      
+      <div style={{ marginTop: '40px', padding: '0 15px' }}>
+        <div style={{ 
+          fontSize: '13px', 
+          color: 'var(--light-text)', 
+          marginBottom: '10px', 
+          fontWeight: '500' 
+        }}>
+          Spaces
+        </div>
+        <ul>
+          <NavItem>
+            <span style={{ 
+              width: '20px', 
+              height: '20px', 
+              borderRadius: '4px', 
+              backgroundColor: '#7b68ee',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontSize: '12px',
+              fontWeight: 'bold'
+            }}>M</span>
+            <span>Marketing</span>
+          </NavItem>
+          <NavItem>
+            <span style={{ 
+              width: '20px', 
+              height: '20px', 
+              borderRadius: '4px', 
+              backgroundColor: '#ff6b6b',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontSize: '12px',
+              fontWeight: 'bold'
+            }}>P</span>
+            <span>Product</span>
+          </NavItem>
+          <NavItem>
+            <span style={{ 
+              width: '20px', 
+              height: '20px', 
+              borderRadius: '4px', 
+              backgroundColor: '#ffa94d',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontSize: '12px',
+              fontWeight: 'bold'
+            }}>E</span>
+            <span>Engineering</span>
+          </NavItem>
+          <NavItem>
+            <span style={{ 
+              width: '20px', 
+              height: '20px', 
+              borderRadius: '4px', 
+              backgroundColor: '#4dabf7',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontSize: '12px',
+              fontWeight: 'bold'
+            }}>D</span>
+            <span>Design</span>
+          </NavItem>
+          <NavItem>
+            <span style={{ 
+              width: '20px', 
+              height: '20px', 
+              borderRadius: '4px', 
+              backgroundColor: '#36b9cc',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontSize: '12px',
+              fontWeight: 'bold'
+            }}>F</span>
+            <span>Finance</span>
+          </NavItem>
+          <NavItem>
+            <span style={{ 
+              width: '20px', 
+              height: '20px', 
+              borderRadius: '4px', 
+              backgroundColor: '#f06595',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontSize: '12px',
+              fontWeight: 'bold'
+            }}>H</span>
+            <span>HR</span>
+          </NavItem>
+          <NavItem>
+            <FiPlus size={18} />
+            <span>Add Space</span>
+          </NavItem>
+        </ul>
+      </div>
     </SidebarContainer>
   );
 };

@@ -2,20 +2,22 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
   :root {
-    --primary-color: #7e56d8;
-    --secondary-color: #5b34b8;
-    --background-color: #f1f1ff;
-    --header-bg: #6739d6;
+    --primary-color: #5664d2;
+    --secondary-color: #4b56b8;
+    --background-color: #f5f8ff;
+    --header-bg: #5664d2;
+    --content-bg: #4a86e8;
     --sidebar-bg: #ffffff;
     --text-color: #333333;
     --light-text: #666666;
+    --white-text: #ffffff;
     --card-bg: #ffffff;
-    --progress-bg: #e0e0ff;
+    --progress-bg: #f1f1ff;
     --success-color: #4CAF50;
     --warning-color: #FFC107;
     --danger-color: #F44336;
     --border-radius: 8px;
-    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
   }
 
   * {

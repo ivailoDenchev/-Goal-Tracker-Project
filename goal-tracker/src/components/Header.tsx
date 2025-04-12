@@ -1,17 +1,25 @@
 import React from 'react';
-import { HeaderContainer, Button, Avatar } from '../styles/Layout';
-import { FiSearch, FiPlus } from 'react-icons/fi';
-import { useGoals } from '../contexts/GoalContext';
+import { HeaderContainer, Button } from '../styles/Layout';
+import { FiSearch } from 'react-icons/fi';
 
 const Header: React.FC = () => {
-  const { activeGoal } = useGoals();
-
   return (
-    <HeaderContainer>
+    <HeaderContainer style={{ 
+      backgroundColor: 'transparent', 
+      boxShadow: 'none', 
+      color: 'var(--white-text)',
+      borderBottom: 'none',
+      position: 'absolute',
+      top: 0,
+      left: '240px',
+      right: 0,
+      zIndex: 20,
+      padding: '12px 20px'
+    }}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <div style={{ 
           position: 'relative',
-          width: '250px',
+          width: '220px',
           backgroundColor: 'rgba(255, 255, 255, 0.2)',
           borderRadius: '4px', 
           display: 'flex',
@@ -35,19 +43,28 @@ const Header: React.FC = () => {
       </div>
       
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <Button primary>
-          <FiPlus size={16} style={{ marginRight: '4px' }} />
-          New
-        </Button>
-        <div style={{ 
-          width: '38px', 
-          height: '38px', 
-          borderRadius: '50%', 
-          overflow: 'hidden',
-          border: '2px solid white'
+        <Button primary style={{ 
+          border: 'none', 
+          color: 'transparent',
+          width: '30px',
+          height: '30px',
+          padding: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}>
-          <Avatar>JD</Avatar>
-        </div>
+          <span style={{ 
+            fontSize: '11px', 
+            color: 'white', 
+            backgroundColor: 'var(--primary-color)',
+            width: '30px',
+            height: '30px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '8px'
+          }}>AI</span>
+        </Button>
       </div>
     </HeaderContainer>
   );

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const AppContainer = styled.div`
   display: flex;
   min-height: 100vh;
+  background-color: var(--background-color);
 `;
 
 export const SidebarContainer = styled.aside`
@@ -12,12 +13,16 @@ export const SidebarContainer = styled.aside`
   padding: 20px 0;
   display: flex;
   flex-direction: column;
+  z-index: 10;
+  position: relative;
 `;
 
 export const MainContainer = styled.main`
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  position: relative;
 `;
 
 export const HeaderContainer = styled.header`
@@ -27,12 +32,15 @@ export const HeaderContainer = styled.header`
   justify-content: space-between;
   align-items: center;
   color: white;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 `;
 
 export const ContentContainer = styled.div`
   padding: 30px;
   overflow-y: auto;
   flex: 1;
+  max-width: 800px;
+  margin: 0 auto;
 `;
 
 export const Card = styled.div`
@@ -51,6 +59,7 @@ export const Button = styled.button<{ primary?: boolean }>`
   font-weight: 500;
   border: ${props => props.primary ? 'none' : '1px solid var(--primary-color)'};
   transition: all 0.2s ease-in-out;
+  font-size: 12px;
   
   &:hover {
     background-color: ${props => props.primary ? 'var(--secondary-color)' : 'var(--background-color)'};
@@ -62,16 +71,16 @@ export const LogoContainer = styled.div`
   align-items: center;
   gap: 10px;
   padding: 0 15px 20px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   border-bottom: 1px solid var(--background-color);
   font-weight: 600;
 `;
 
 export const NavItem = styled.li<{ active?: boolean }>`
   padding: 12px 15px;
-  margin: 5px 0;
+  margin: 2px 10px;
   cursor: pointer;
-  border-radius: 0 20px 20px 0;
+  border-radius: 8px;
   transition: all 0.2s ease-in-out;
   background-color: ${props => props.active ? 'var(--background-color)' : 'transparent'};
   color: ${props => props.active ? 'var(--primary-color)' : 'var(--text-color)'};
@@ -79,6 +88,7 @@ export const NavItem = styled.li<{ active?: boolean }>`
   display: flex;
   align-items: center;
   gap: 10px;
+  font-size: 14px;
   
   &:hover {
     background-color: var(--background-color);

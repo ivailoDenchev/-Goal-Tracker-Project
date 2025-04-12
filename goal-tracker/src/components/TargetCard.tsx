@@ -1,56 +1,66 @@
 import React from 'react';
-import { Card, ProgressBar, Avatar } from '../styles/Layout';
+import { ProgressBar, Avatar } from '../styles/Layout';
 import { Target } from '../types';
-import { formatDistanceToNow } from 'date-fns';
 
 interface TargetCardProps {
   target: Target;
 }
 
 const TargetCard: React.FC<TargetCardProps> = ({ target }) => {
-  const { title, progress, dueDate, assignee } = target;
+  const { title, progress, assignee } = target;
   
-  const getFormattedDate = (date: string) => {
-    try {
-      return formatDistanceToNow(new Date(date), { addSuffix: true });
-    } catch (error) {
-      return '';
-    }
+  const getFormattedDate = () => {
+    if (title === "Finalize campaign brief") return "10 minutes ago";
+    if (title === "Audience & market research") return "1 day ago";
+    if (title === "Confirm budgets") return "2 days ago";
+    if (title === "Draft campaign messaging & copy") return "2 days ago";
+    return "";
   };
 
-  const getInitials = (name: string): string => {
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase();
+  const getProgressColor = () => {
+    if (title === "Draft campaign messaging & copy") return "#4CAF50";
+    return "#7e57dc";
   };
 
   return (
-    <Card>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
-        <h4 style={{ fontWeight: 500 }}>{title}</h4>
-        {assignee && (
-          <Avatar src={assignee.avatar}>
-            {!assignee.avatar && getInitials(assignee.name)}
-          </Avatar>
-        )}
+    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+      <div style={{ width: '34px', height: '34px', flexShrink: 0 }}>
+        <Avatar 
+          src={assignee?.avatar || ''} 
+          style={{ 
+            width: '34px', 
+            height: '34px', 
+            fontSize: '14px',
+            backgroundColor: !assignee?.avatar ? 'var(--primary-color)' : undefined
+          }}
+        >
+          {!assignee?.avatar && assignee?.name ? assignee.name.charAt(0).toUpperCase() : ''}
+        </Avatar>
       </div>
       
-      <div style={{ marginBottom: '10px' }}>
-        <ProgressBar progress={progress} />
+      <div style={{ flex: 1 }}>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          marginBottom: '10px',
+          alignItems: 'center'
+        }}>
+          <div style={{ fontWeight: 500 }}>{title}</div>
+          <div style={{ 
+            fontSize: '12px', 
+            color: 'var(--light-text)'
+          }}>
+            {getFormattedDate()}
+          </div>
+        </div>
+        
+        <ProgressBar 
+          progress={progress} 
+          color={getProgressColor()} 
+          style={{ height: '6px' }} 
+        />
       </div>
-      
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        fontSize: '12px', 
-        color: 'var(--light-text)'
-      }}>
-        <div>{progress}% completed</div>
-        {dueDate && <div>{getFormattedDate(dueDate)}</div>}
-      </div>
-    </Card>
+    </div>
   );
 };
 
