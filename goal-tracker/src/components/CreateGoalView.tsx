@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiPlus, FiCheckCircle, FiCircle, FiCalendar, FiX, FiChevronDown } from 'react-icons/fi';
 import { format, parseISO, addDays, isAfter, isBefore, isToday } from 'date-fns';
-import CreateGoalCalendar from './CreateGoalCalendar';
+import Calendar from './Calendar';
 import { useGoals } from '../contexts/GoalContext';
 import { Target } from '../types';
 
@@ -96,12 +96,16 @@ const CreateGoalView: React.FC = () => {
 
   const handleAddGoal = () => {
     if (goalTitle.trim() && selectedParentGoal) {
-      addTarget(selectedParentGoal, {
+      // Create a new target to add to the selected parent goal
+      const newTarget = {
         title: goalTitle,
         completed: false,
         dueDate: selectedDate.toISOString(),
         progress: 0
-      });
+      };
+      
+      // Add the target to the parent goal (this will also add it to recents)
+      addTarget(selectedParentGoal, newTarget);
       
       // Reset and close modal
       setGoalTitle('');
@@ -122,7 +126,7 @@ const CreateGoalView: React.FC = () => {
       overflow: 'auto'
     }}>
       {/* Main Calendar */}
-      <CreateGoalCalendar 
+      <Calendar 
         onDateSelect={handleDateSelect}
         onGoalSelect={handleGoalSelect}
       />
@@ -142,31 +146,27 @@ const CreateGoalView: React.FC = () => {
           marginBottom: '15px'
         }}>
           <h2 style={{ fontSize: '16px', fontWeight: '500' }}>
-            {selectedGoal 
-              ? 'Goal Details' 
-              : format(selectedDate, 'MMMM d, yyyy')}
+            Create Goal
           </h2>
-          {!selectedGoal && (
-            <button 
-              style={{
-                backgroundColor: 'var(--primary-color)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                padding: '5px 10px',
-                fontSize: '12px',
-                fontWeight: '500',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px'
-              }}
-              onClick={() => setShowAddGoalModal(true)}
-            >
-              <FiPlus size={14} />
-              Create Goal
-            </button>
-          )}
+          <button 
+            style={{
+              backgroundColor: 'var(--primary-color)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              padding: '5px 10px',
+              fontSize: '12px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}
+            onClick={() => setShowAddGoalModal(true)}
+          >
+            <FiPlus size={14} />
+            Create Goal
+          </button>
         </div>
         
         {selectedGoal ? (
@@ -267,43 +267,6 @@ const CreateGoalView: React.FC = () => {
               Back to Calendar
             </button>
           </div>
-        ) : goalsForDate.length > 0 ? (
-          <ul style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {goalsForDate.map((goal, index) => (
-              <li 
-                key={index}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  padding: '8px',
-                  borderRadius: '4px',
-                  backgroundColor: 'var(--hover-bg)',
-                  cursor: 'pointer'
-                }}
-                onClick={() => handleGoalSelect(goal.target.id, goal.goalId)}
-              >
-                {goal.target.completed ? (
-                  <FiCheckCircle size={16} color="var(--success-color)" />
-                ) : (
-                  <FiCircle size={16} color="var(--light-text)" />
-                )}
-                <div style={{ flex: 1 }}>
-                  <div style={{
-                    fontSize: '14px',
-                    fontWeight: goal.target.completed ? '400' : '500',
-                    textDecoration: goal.target.completed ? 'line-through' : 'none',
-                    color: goal.target.completed ? 'var(--light-text)' : 'var(--text-color)'
-                  }}>
-                    {goal.target.title}
-                  </div>
-                  <div style={{ fontSize: '12px', color: 'var(--light-text)' }}>
-                    From: {goal.goalTitle}
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
         ) : (
           <div style={{
             display: 'flex',
@@ -313,8 +276,8 @@ const CreateGoalView: React.FC = () => {
             padding: '30px 0',
             color: 'var(--light-text)'
           }}>
-            <p style={{ marginBottom: '5px' }}>No goals for this day</p>
-            <small>Select a different date or add a new goal</small>
+            <p style={{ marginBottom: '5px' }}>Select a date or goal from the calendar</p>
+            <small>Or create a new goal with the button above</small>
           </div>
         )}
       </div>
@@ -381,7 +344,7 @@ const CreateGoalView: React.FC = () => {
                   color: 'var(--light-text)',
                   marginLeft: '26px'
                 }}>
-                  <span>From: {goal.goalTitle}</span>
+                  <span>{goal.goalTitle}</span>
                   <span style={{
                     display: 'flex',
                     alignItems: 'center',

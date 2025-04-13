@@ -15,12 +15,12 @@ import {
 import { Goal, Target } from '../types';
 import { useGoals } from '../contexts/GoalContext';
 
-interface GoalCalendarProps {
+interface CalendarProps {
   onDateSelect?: (date: Date) => void;
   onGoalSelect?: (goalId: string, parentGoalId: string) => void;
 }
 
-const GoalCalendar: React.FC<GoalCalendarProps> = ({ onDateSelect, onGoalSelect }) => {
+const Calendar: React.FC<CalendarProps> = ({ onDateSelect, onGoalSelect }) => {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const { goals, updateTarget } = useGoals();
   
@@ -236,4 +236,4 @@ const GoalCalendar: React.FC<GoalCalendarProps> = ({ onDateSelect, onGoalSelect 
   );
 };
 
-export default GoalCalendar; 
+export default Calendar; 

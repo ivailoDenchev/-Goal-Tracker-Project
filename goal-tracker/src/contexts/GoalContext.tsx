@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
-import { Goal, Target, TimelineItem } from '../types';
+import { Goal, Target, TimelineItem, PersonalList, ListTask } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
 // Mock data
@@ -90,6 +90,58 @@ const initialGoals: Goal[] = [
   }
 ];
 
+// Initial personal lists with some default colors
+const initialPersonalLists: PersonalList[] = [
+  {
+    id: '1',
+    title: 'Work Tasks',
+    color: '#4f6bed', // Blue
+    isDefault: true,
+    tasks: [
+      {
+        id: '1-1',
+        title: 'Update weekly report',
+        completed: false,
+        dueDate: new Date(Date.now() + 86400000).toISOString(),
+        priority: 'high'
+      },
+      {
+        id: '1-2',
+        title: 'Prepare presentation',
+        completed: true,
+        dueDate: new Date().toISOString(),
+        priority: 'medium'
+      }
+    ]
+  },
+  {
+    id: '2',
+    title: 'Personal Tasks',
+    color: '#65cd91', // Green
+    tasks: [
+      {
+        id: '2-1',
+        title: 'Buy groceries',
+        completed: false,
+        priority: 'medium'
+      }
+    ]
+  },
+  {
+    id: '3',
+    title: 'Learning',
+    color: '#f44336', // Red
+    tasks: [
+      {
+        id: '3-1',
+        title: 'Read React documentation',
+        completed: false,
+        priority: 'low'
+      }
+    ]
+  }
+];
+
 interface GoalContextType {
   goals: Goal[];
   activeGoal: Goal | null;
@@ -105,6 +157,17 @@ interface GoalContextType {
   deleteTimelineItem: (goalId: string, itemId: string) => void;
   getTasksForDate: (date: Date) => { target: Target; goalId: string; goalTitle: string }[];
   getTasksCountForDate: (date: Date) => number;
+  recentGoals: { target: Target; goalId: string; goalTitle: string }[];
+  // Personal List functionality
+  personalLists: PersonalList[];
+  activeList: PersonalList | null;
+  setActiveList: (list: PersonalList | null) => void;
+  addPersonalList: (title: string, color: string) => void;
+  updatePersonalList: (list: PersonalList) => void;
+  deletePersonalList: (id: string) => void;
+  addListTask: (listId: string, task: Omit<ListTask, 'id'>) => void;
+  updateListTask: (listId: string, task: ListTask) => void;
+  deleteListTask: (listId: string, taskId: string) => void;
 }
 
 const GoalContext = createContext<GoalContextType | undefined>(undefined);
@@ -112,6 +175,11 @@ const GoalContext = createContext<GoalContextType | undefined>(undefined);
 export const GoalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [goals, setGoals] = useState<Goal[]>(initialGoals);
   const [activeGoal, setActiveGoal] = useState<Goal | null>(initialGoals[0] || null);
+  const [recentGoals, setRecentGoals] = useState<{ target: Target; goalId: string; goalTitle: string }[]>([]);
+  const [personalLists, setPersonalLists] = useState<PersonalList[]>(initialPersonalLists);
+  const [activeList, setActiveList] = useState<PersonalList | null>(
+    initialPersonalLists.find(list => list.isDefault) || initialPersonalLists[0] || null
+  );
 
   // Calculate goal progress based on targets
   useEffect(() => {
@@ -126,6 +194,21 @@ export const GoalProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       })
     );
   }, []);
+
+  // Add a new recent goal entry
+  const addToRecent = (goalId: string, target: Target) => {
+    const goal = goals.find(g => g.id === goalId);
+    if (!goal) return;
+
+    const newRecentEntry = {
+      target,
+      goalId,
+      goalTitle: goal.title
+    };
+
+    // Add to beginning of array and limit to 6 items
+    setRecentGoals(prev => [newRecentEntry, ...prev.slice(0, 5)]);
+  };
 
   const addGoal = (title: string) => {
     const newGoal: Goal = {
@@ -158,6 +241,10 @@ export const GoalProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           ...target,
           id: uuidv4()
         };
+        
+        // Add to recent goals
+        addToRecent(goalId, newTarget);
+        
         const updatedGoal = {
           ...goal,
           targets: [...goal.targets, newTarget]
@@ -174,6 +261,12 @@ export const GoalProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const updateTarget = (goalId: string, updatedTarget: Target) => {
     setGoals(goals.map(goal => {
       if (goal.id === goalId) {
+        // Add to recent goals if it was marked as completed
+        const oldTarget = goal.targets.find(t => t.id === updatedTarget.id);
+        if (oldTarget && !oldTarget.completed && updatedTarget.completed) {
+          addToRecent(goalId, updatedTarget);
+        }
+        
         const updatedGoal = {
           ...goal,
           targets: goal.targets.map(target => 
@@ -284,6 +377,87 @@ export const GoalProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return getTasksForDate(date).length;
   };
 
+  // Personal List functions
+  const addPersonalList = (title: string, color: string) => {
+    const newList: PersonalList = {
+      id: uuidv4(),
+      title,
+      color,
+      tasks: []
+    };
+    setPersonalLists([...personalLists, newList]);
+  };
+
+  const updatePersonalList = (updatedList: PersonalList) => {
+    setPersonalLists(personalLists.map(list => 
+      list.id === updatedList.id ? updatedList : list
+    ));
+    if (activeList && activeList.id === updatedList.id) {
+      setActiveList(updatedList);
+    }
+  };
+
+  const deletePersonalList = (id: string) => {
+    setPersonalLists(personalLists.filter(list => list.id !== id));
+    if (activeList && activeList.id === id) {
+      setActiveList(personalLists.find(list => list.id !== id) || null);
+    }
+  };
+
+  const addListTask = (listId: string, task: Omit<ListTask, 'id'>) => {
+    setPersonalLists(personalLists.map(list => {
+      if (list.id === listId) {
+        const newTask: ListTask = {
+          ...task,
+          id: uuidv4()
+        };
+        const updatedList = {
+          ...list,
+          tasks: [...list.tasks, newTask]
+        };
+        if (activeList && activeList.id === listId) {
+          setActiveList(updatedList);
+        }
+        return updatedList;
+      }
+      return list;
+    }));
+  };
+
+  const updateListTask = (listId: string, updatedTask: ListTask) => {
+    setPersonalLists(personalLists.map(list => {
+      if (list.id === listId) {
+        const updatedList = {
+          ...list,
+          tasks: list.tasks.map(task => 
+            task.id === updatedTask.id ? updatedTask : task
+          )
+        };
+        if (activeList && activeList.id === listId) {
+          setActiveList(updatedList);
+        }
+        return updatedList;
+      }
+      return list;
+    }));
+  };
+
+  const deleteListTask = (listId: string, taskId: string) => {
+    setPersonalLists(personalLists.map(list => {
+      if (list.id === listId) {
+        const updatedList = {
+          ...list,
+          tasks: list.tasks.filter(task => task.id !== taskId)
+        };
+        if (activeList && activeList.id === listId) {
+          setActiveList(updatedList);
+        }
+        return updatedList;
+      }
+      return list;
+    }));
+  };
+
   return (
     <GoalContext.Provider value={{
       goals,
@@ -299,7 +473,18 @@ export const GoalProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       updateTimelineItem,
       deleteTimelineItem,
       getTasksForDate,
-      getTasksCountForDate
+      getTasksCountForDate,
+      recentGoals,
+      // Personal List functionality
+      personalLists,
+      activeList,
+      setActiveList,
+      addPersonalList,
+      updatePersonalList,
+      deletePersonalList,
+      addListTask,
+      updateListTask,
+      deleteListTask
     }}>
       {children}
     </GoalContext.Provider>

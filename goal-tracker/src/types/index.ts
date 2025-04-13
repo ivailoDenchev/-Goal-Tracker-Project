@@ -27,4 +27,20 @@ export interface User {
   id: string;
   name: string;
   avatar?: string;
+}
+
+export interface PersonalList {
+  id: string;
+  title: string;
+  color: string;
+  tasks: ListTask[];
+  isDefault?: boolean;
+}
+
+export interface ListTask {
+  id: string;
+  title: string;
+  completed: boolean;
+  dueDate?: string;
+  priority?: 'low' | 'medium' | 'high';
 } 

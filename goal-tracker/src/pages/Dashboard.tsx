@@ -4,6 +4,7 @@ import Sidebar from '../components/Sidebar';
 import GoalDetail from '../components/GoalDetail';
 import GoalsDashboard from '../components/GoalsDashboard';
 import InboxDashboard from '../components/InboxDashboard';
+import CalendarView from '../components/CalendarView';
 import CreateGoalView from '../components/CreateGoalView';
 import { FiSearch } from 'react-icons/fi';
 
@@ -57,7 +58,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onToggleSearch }) => {
           ) : activeTab === 'inbox' ? (
             <InboxDashboard />
           ) : activeTab === 'calendar' ? (
-            <CreateGoalView />
+            <CalendarView />
           ) : (
             <GoalDetail />
           )}
