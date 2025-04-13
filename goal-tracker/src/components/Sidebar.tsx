@@ -1,6 +1,6 @@
 import React from 'react';
 import { SidebarContainer, LogoContainer, NavItem } from '../styles/Layout';
-import { FiHome, FiInbox, FiTarget, FiPlus, FiMoreHorizontal } from 'react-icons/fi';
+import { FiHome, FiInbox, FiTarget, FiPlus, FiMoreHorizontal, FiCalendar } from 'react-icons/fi';
 
 interface SidebarProps {
   onTabChange: (tab: string) => void;
@@ -56,6 +56,11 @@ const Sidebar: React.FC<SidebarProps> = ({ onTabChange, activeTab = 'goals' }) =
           <NavItem active={activeTab === 'goals'} onClick={() => onTabChange('goals')}>
             <FiTarget size={18} />
             <span>Goals</span>
+          </NavItem>
+          
+          <NavItem active={activeTab === 'calendar'} onClick={() => onTabChange('calendar')}>
+            <FiCalendar size={18} />
+            <span>Calendar</span>
           </NavItem>
           
           <NavItem active={activeTab === 'more'} onClick={() => onTabChange('more')}>

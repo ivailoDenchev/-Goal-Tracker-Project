@@ -103,6 +103,8 @@ interface GoalContextType {
   addTimelineItem: (goalId: string, item: Omit<TimelineItem, 'id'>) => void;
   updateTimelineItem: (goalId: string, item: TimelineItem) => void;
   deleteTimelineItem: (goalId: string, itemId: string) => void;
+  getTasksForDate: (date: Date) => { target: Target; goalId: string; goalTitle: string }[];
+  getTasksCountForDate: (date: Date) => number;
 }
 
 const GoalContext = createContext<GoalContextType | undefined>(undefined);
@@ -257,6 +259,30 @@ export const GoalProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return goal;
     }));
   };
+  
+  // Calendar-specific functionality
+  const getTasksForDate = (date: Date): { target: Target; goalId: string; goalTitle: string }[] => {
+    const tasks: { target: Target; goalId: string; goalTitle: string }[] = [];
+    const dateString = date.toISOString().split('T')[0];
+    
+    goals.forEach(goal => {
+      goal.targets.forEach(target => {
+        if (target.dueDate && target.dueDate.split('T')[0] === dateString) {
+          tasks.push({
+            target,
+            goalId: goal.id,
+            goalTitle: goal.title
+          });
+        }
+      });
+    });
+    
+    return tasks;
+  };
+  
+  const getTasksCountForDate = (date: Date): number => {
+    return getTasksForDate(date).length;
+  };
 
   return (
     <GoalContext.Provider value={{
@@ -271,7 +297,9 @@ export const GoalProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       deleteTarget,
       addTimelineItem,
       updateTimelineItem,
-      deleteTimelineItem
+      deleteTimelineItem,
+      getTasksForDate,
+      getTasksCountForDate
     }}>
       {children}
     </GoalContext.Provider>

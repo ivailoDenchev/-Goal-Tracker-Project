@@ -4,6 +4,7 @@ import Sidebar from '../components/Sidebar';
 import GoalDetail from '../components/GoalDetail';
 import GoalsDashboard from '../components/GoalsDashboard';
 import InboxDashboard from '../components/InboxDashboard';
+import CreateGoalView from '../components/CreateGoalView';
 import { FiSearch } from 'react-icons/fi';
 
 interface DashboardProps {
@@ -19,12 +20,12 @@ const Dashboard: React.FC<DashboardProps> = ({ onToggleSearch }) => {
       <MainContainer style={{ 
         position: 'relative', 
         overflow: 'hidden',
-        padding: activeTab === 'goals' || activeTab === 'inbox' ? '0' : undefined,
+        padding: activeTab === 'goals' || activeTab === 'inbox' || activeTab === 'calendar' ? '0' : undefined,
         width: '100%',
         maxHeight: '100vh',
         display: 'flex'
       }}>
-        {activeTab !== 'goals' && activeTab !== 'inbox' && (
+        {activeTab !== 'goals' && activeTab !== 'inbox' && activeTab !== 'calendar' && (
           <div 
             style={{ 
               position: 'absolute',
@@ -55,6 +56,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onToggleSearch }) => {
             <GoalsDashboard />
           ) : activeTab === 'inbox' ? (
             <InboxDashboard />
+          ) : activeTab === 'calendar' ? (
+            <CreateGoalView />
           ) : (
             <GoalDetail />
           )}
